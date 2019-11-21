@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+  labels:
+    run: webservice
+  name: webservice
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: webservice
+  template:
+    metadata:
+      labels:
+        run: webservice
+    spec:
+      containers:
+      - image: dockercloud/hello-world
+        imagePullPolicy: Always
+        name: webservice
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: webservice
+  name: webservice
+  namespace: default
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    run: webservice
+  type: ClusterIP

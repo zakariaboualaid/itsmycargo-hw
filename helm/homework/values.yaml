@@ -1,0 +1,20 @@
+backendReplicaCount: 1
+
+backendImage:
+  repository: dockercloud/hello-world
+  pullPolicy: Always
+
+backendClusterService:
+  type: ClusterIP
+  port: 80
+
+backendServiceSelector: webservice
+
+image:
+  repository: nginx:latest
+  pullPolicy: Always
+
+nginxClusterService:
+  type: NodePort
+
+nginxServiceSelector: nginx

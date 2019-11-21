@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+  labels:
+    run: {{ .Values.backendServiceSelector }}
+  name: {{ .Values.backendServiceSelector }}
+  namespace: homework-helm
+spec:
+  replicas: {{ .Values.backendReplicaCount }}
+  selector:
+    matchLabels:
+      run: {{ .Values.backendServiceSelector }}
+  template:
+    metadata:
+      labels:
+        run: {{ .Values.backendServiceSelector }}
+    spec:
+      containers:
+      - image: {{ .Values.backendImage.repository }}
+        imagePullPolicy: {{ .Values.backendImage.pullPolicy  }}
+        name: webservice
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: {{ .Values.backendServiceSelector }}
+  name: {{ .Values.backendServiceSelector }}
+  namespace: homework-helm
+spec:
+  ports:
+  - port: {{ .Values.backendClusterService.port }}
+    protocol: TCP
+    targetPort: 80
+  selector:
+    run: {{ .Values.backendServiceSelector }}
+  type: {{ .Values.backendClusterService.type }}

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: homework-helm
+  name: nginx-config
+data:
+  webservice.conf: |
+   server {
+     listen       80;
+     server_name  localhost;
+     location / {
+       proxy_pass http://{{ .Values.backendServiceSelector }}.{{ .Release.Namespace }}:80/;
+     }
+   }
+
+
